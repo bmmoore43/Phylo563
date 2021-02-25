@@ -873,3 +873,25 @@ primatesAA 22 seqs, max length 551, avg  length 504
 00:00:00     10 MB(0%)  Iter  18  100.00%  Refine biparts
 00:00:00     10 MB(0%)  Iter  19  100.00%  Refine biparts
 00:00:00     10 MB(0%)  Iter  20  100.00%  Refine biparts
+
+## Orthofinder
+
+### setting up on the chtc (wi supercomputer)
+set up environment and download using anaconda
+	
+	conda install -c conda-forge conda-pack
+	conda create --name Orthofinder
+	conda activate Orthofinder
+	conda install orthofinder
+	conda deactivate
+
+pack up to send to chtc
+
+	conda pack -n Orthofinder
+
+how to unpack:
+
+	mkdir -p Orthofinder
+	tar -xzf Orthofinder.tar.gz -C Orthofinder
+	source Orthofinder/bin/activate
+	conda-unpack
