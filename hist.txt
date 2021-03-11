@@ -1,0 +1,500 @@
+  103  less taxon-sets/all/all-taxa-incomplete.conf 
+  104  cd taxon-sets/all
+  105  mkdir log
+  106  ls
+  107  phyluce_assembly_get_fastas_from_match_counts     --contigs ../../trinity-assemblies/contigs     --locus-db ../../uce-search-results/probe.matches.sqlite     --match-count-output all-taxa-incomplete.conf     --output all-taxa-incomplete.fasta     --incomplete-matrix all-taxa-incomplete.incomplete     --log-path log
+  108  phyluce_assembly_get_fastas_from_match_counts --contigs ../../spade-assemblies/contigs/ --locus-db ../../uce-search-results/probe.matches.sqlite --match-count-output all-taxa-incomplete.conf --output all-taxa-incomplete.fasta --incomplete-matrix all-taxa-incomplete.incomplete --log-path log
+  109  ls taxon-sets/all
+  110  ls
+  111  less all-taxa-incomplete.fasta 
+  112  phyluce_assembly_explode_get_fastas_file --alignments all-taxa-incomplete.fasta --output exploded-fastas --by-taxon
+  113  phyluce_assembly_explode_get_fastas_file -h
+  114  phyluce_assembly_explode_get_fastas_file --input all-taxa-incomplete.fasta --output exploded-fastas --by-taxon
+  115  ls
+  116  ls exploded-fastas/
+  117  for i in exploded-fastas/*.fasta; do phyluce_assembly_get_fasta_lengths --input $i --csv; done
+  118  history > hist.txt
+  119  cd ~/../../Volumes/maeda2/
+  120  ls
+  121  cd 4_prot_seq/
+  122  ls
+  123  cd green_plant/
+  124  ls
+  125  ls grplant_input
+  126  ln -s grplant_input/Azolla_filiculoides.protein.highconfidence_v1.1.fasta
+  127  ln -s grplant_input/Salvinia_cucullata.protein.highconfidence_v1.2.fasta 
+  128  ls
+  129  cat comb_grnplant_fasta Azolla_filiculoides.protein.highconfidence_v1.1.fasta Salvinia_cucullata.protein.highconfidence_v1.2.fasta > comb_grnplant_fasta2
+  130  ls
+  131  mv comb_grnplant_fasta2 comb_grnplant_fasta
+  132  ls
+  133  pwd
+  134  cd ~/Desktop/post_doc/1_phylogenies/5_PMT_phlogeny/
+  135  ls
+  136  ln -s /Volumes/maeda2/4_prot_seq/green_plant/comb_grnplant_fasta 
+  137  ls
+  138  ls -lt
+  139  python ~/Desktop/post_doc/scripts/1_phylogenies/FastaManager.py -f getseq2 -name grnplant_PMT.txt -fasta comb_grnplant_fasta 
+  140  less comb_grnplant_fasta 
+  141  python ~/Desktop/post_doc/scripts/1_phylogenies/FastaManager.py -f getseq2 -name grnplant_PMT_mod.txt -fasta comb_grnplant_fasta 
+  142  ls -lt
+  143  cd /Volumes/maeda2/4_prot_seq/green_plant/
+  144  ls
+  145  cat comb_grnplant_fasta Ppatens_318_v3.3.protein_primaryTranscriptOnly.fa.mod.fa proteome.all_transcripts.egu.fasta.mod.fa GCF_000188115.4_SL3.0_protein.faa.mod.fa > comb_grnplant_fasta2
+  146  ls
+  147  cd /Volumes/maeda2/4_prot_seq/green_plant/
+  148  cd /Volumes/maeda2/4_prot_seq/green_plant/
+  149  cat comb_grnplant_fasta Ppatens_318_v3.3.protein_primaryTranscriptOnly.fa.mod.fa proteome.all_transcripts.egu.fasta.mod.fa GCF_000188115.4_SL3.0_protein.faa.mod.fa > comb_grnplant_fasta2
+  150  cd ~/Desktop/post_doc/1_phylogenies/5_PMT_phlogeny/
+  151  ls
+  152  cd /Volumes/maeda2/4_prot_seq/green_plant/
+  153  mv comb_grnplant_fasta2 comb_grnplant_fasta
+  154  cd ~/Desktop/post_doc/1_phylogenies/5_PMT_phlogeny/
+  155  python ~/Desktop/post_doc/scripts/1_phylogenies/FastaManager.py -f getseq2 -name grnplant_PMT_mod.txt -fasta comb_grnplant_fasta 
+  156  ls
+  157  grep ">" grnplant_PMT_mod.txt.fa > grnplant_PMT_mod.txt.fa_genelist.txt
+  158  ls
+  159  python ~/Desktop/post_doc/scripts/Utilities/combine_dataframes_pd.py -df1 grnplant_PMT_mod.txt -df2 grnplant_PMT_mod.txt.fa_genelist.txt -type o
+  160  ls
+  161  mafft --auto --anysymbol grnplant_PMT_mod.txt.fa > grnplant_PMT_mod.txt.fa.aln
+  162  ls
+  163  less grnplant_PMT_mod.txt.fa.aln
+  164  python filter_fasta.py -fasta grnplant_PMT_mod.txt.fa -stdv 2
+  165  python ~/Desktop/post_doc/scripts/1_phylogenies/filter_fasta.py -fasta grnplant_PMT_mod.txt.fa -stdv 2
+  166  ls
+  167  mv grnplant_PMT_mod.txt.fa_parsed.fa grnplant_PMT_mod.txt.fa_parsedstd2.fa
+  168  grep ">" -o grnplant_PMT_mod.txt.fa_parsedstd2.fa | wc -l
+  169  rm grnplant_PMT_mod.txt.fa.aln
+  170  mafft --auto --anysymbol grnplant_PMT_mod.txt.fa_parsedstd2.fa > grnplant_PMT_mod.txt.fa_parsedstd2.fa.aln
+  171  ls
+  172  mv grnplant_PMT_mod.txt.fa_parsedstd2.fa grnplant_PMT_mod.txt.fa_filterstd2.fa
+  173  mv grnplant_PMT_mod.txt.fa_parsedstd2.fa.aln grnplant_PMT_mod.txt.fa_filterstd2.fa.aln
+  174  scp grnplant_PMT_mod.txt.fa_filterstd2.fa.aln bmoore22@submit2.chtc.wisc.edu:
+  175  cd ../../2_coexpress_pthwy/brachy/promoter_enrich_Brachy_556_v3.2/
+  176  ls
+  177  scp PTAL-ADH_clusters_to_rerun_* bmoore22@submit2.chtc.wisc.edu:
+  178  cd PTAL_CRE_ML_results/ML_results_genestart/
+  179  ls
+  180  scp *_df_p0.01.txt_nodups.txt bmoore22@submit2.chtc.wisc.edu:
+  181  cd ../../
+  182  cd PTAL_clusters/promoters2/
+  183  ls
+  184  scp *_df_p0.01.txt_nodups.txt bmoore22@submit2.chtc.wisc.edu:
+  185  cd ../../
+  186  ls
+  187  cd ADH1_brachy_CRE_ML_results
+  188  cd gene_start/
+  189  ls
+  190  scp *_df_p0.01.txt_nodups.txt bmoore22@submit2.chtc.wisc.edu:
+  191  cd ../
+  192  ls
+  193  cd mRNA_start/
+  194  ls
+  195  scp *_df_p0.01.txt_nodups.txt bmoore22@submit2.chtc.wisc.edu:
+  196  ls
+  197  cd ../
+  198  ls
+  199  python ~/Desktop/post_doc/scripts/1_phylogenies/FastaManager.py -f getseq2 -name grnplant_PMT_mod.txt -fasta comb_grnplant_fasta 
+  200  cd /Volumes/maeda2/
+  201  ls
+  202  cd orthofinder/
+  203  ls
+  204  cd green_plant/
+  205  ls
+  206  tar -zxvkf grplnt_Results.tar.gz Orthogroups*
+  207  tar -zxvkf grplnt_Results.tar.gz
+  208  ls
+  209  tar -zxvkf grplnt_Results.tar.gz
+  210  cd /Volumes/maeda2/orthofinder/green_plant/
+  211  ls
+  212  tar -zxvkf grplnt_Results.tar.gz
+  213  cd Desktop/post_doc/2_coexpress_pthwy/brachy/
+  214  cd promoter_enrich_Brachy_
+  215  cd promoter_enrich_Brachy_556_v3.2/
+  216  ls
+  217  cd imp_clusters_based_on_F1/
+  218  ls
+  219  less Blast_Bdistachyon_192v1_bestmatch_mod2.txt
+  220  cd ../
+  221  less Blast_Bdistachyon_192v1_bestmatch_mod2.txt
+  222  ls
+  223  cd neg_clusters/
+  224  ls
+  225  for i in *_neg.txt; do echo $i; python ~/Desktop/post_doc/scripts/Utilities/combine_dataframes_pd.py -df1 $i -df2 Blast_Bdistachyon_556v3_altsplice_convert.txt -type -df1; done
+  226  ln -s ../Blast_Bdistachyon_556v3_altsplice_convert.txt
+  227  ls
+  228  for i in *_neg.txt; do echo $i; python ~/Desktop/post_doc/scripts/Utilities/combine_dataframes_pd.py -df1 $i -df2 Blast_Bdistachyon_556v3_altsplice_convert.txt -type -df1; done
+  229  for i in *_neg.txt; do echo $i; python ~/Desktop/post_doc/scripts/Utilities/combine_dataframes_pd.py -df1 $i -df2 Blast_Bdistachyon_556v3_altsplice_convert.txt -type df1; done
+  230  ln -s ../Blast_Bdistachyon_192v1_bestmatch_mod2.txt 
+  231  ls
+  232  python ~/Desktop/post_doc/scripts/Utilities/combine_dataframes_pd.py -df1 FMT_neg.txt -df2 Blast_Bdistachyon_192v1_bestmatch_mod2.txt -type df1
+  233  ln -s ../Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord.fa.mod.fa 
+  234  for i in *_v3.2_altsplice.txt; do echo $i: done; done
+  235  for i in *_v3.2_altsplice.txt; do echo $i; python ~/Desktop/post_doc/scripts/1_phylogenies/FastaManager.py -f getseq2 -fasta Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord.fa.mod.fa -name $i; done
+  236  ls
+  237  cd ../
+  238  ls
+  239  cd imp_clusters_based_on_F1/
+  240  ls
+  241  cat *_imp > all_imp_kmers_PTAL-ADH1.txt
+  242  ls
+  243  cd ../neg_clusters/
+  244  ls
+  245  ls
+  246  ln -s ../imp_clusters_based_on_F1/all_imp_kmers_PTAL-ADH1.txt 
+  247  ls
+  248  python ~/Desktop/post_doc/scripts/map_kmers_get_coords.py -fet all_imp_kmers_PTAL-ADH1.txt -dir ./ -gff ../Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord
+  249  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/map_kmers_get_coords.py -fet all_imp_kmers_PTAL-ADH1.txt -dir ./ -gff ../Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord
+  250  ls
+  251  for i in PAL*_v3.2_altsplice.txt; do echo $i; python ~/Desktop/post_doc/scripts/1_phylogenies/FastaManager.py -f getseq2 -fasta Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord.fa.mod.fa -name $i; done
+  252  ln -s ../Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord.fa.mod.fa 
+  253  for i in PAL*_v3.2_altsplice.txt; do echo $i; python ~/Desktop/post_doc/scripts/1_phylogenies/FastaManager.py -f getseq2 -fasta Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord.fa.mod.fa -name $i; done
+  254  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/map_kmers_get_coords.py -fet all_imp_kmers_PTAL-ADH1.txt -dir ./ -gff ../Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord
+  255  cd ../
+  256  ls
+  257  cd pos_coexpressed_lignin_enz/
+  258  ls
+  259  ln -s
+  260  ln -s ../Blast_Bdistachyon_556v3_altsplice_convert.txt
+  261  ls
+  262  python ~/Desktop/post_doc/scripts/Utilities/combine_dataframes_pd.py -df1 lignin_coexpressed_enz.txt -df2 Blast_Bdistachyon_556v3_altsplice_convert.txt -type df1
+  263  ls
+  264  ln -s ../Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord.fa.mod.fa
+  265  ls
+  266  ls
+  267  python ~/Desktop/post_doc/scripts/1_phylogenies/FastaManager.py -f getseq2 -fasta Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord.fa.mod.fa -name lignin_coexpressed_enz_v3.2_altsplice.txt
+  268  ls
+  269  less lignin_coexpressed_enz_v3.2_altsplice.txt.fa
+  270  ls ../
+  271  ls ../imp_clusters_based_on_F1/
+  272  ln -s ../imp_clusters_based_on_F1/all_imp_kmers_PTAL-ADH1.txt
+  273  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/map_kmers_get_coords.py -fet all_imp_kmers_PTAL-ADH1.txt -fasta lignin_coexpressed_enz_v3.2_altsplice.txt.fa -gff ../Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord
+  274  ls
+  275  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/map_kmers_get_coords.py -fet all_imp_kmers_PTAL-ADH1.txt -fasta lignin_coexpressed_enz_v3.2_altsplice.txt.fa -gff ../Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord
+  276  cd ../neg_clusters/
+  277  ls
+  278  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/map_kmers_get_coords.py -fet all_imp_kmers_PTAL-ADH1.txt -dir ./ -gff ../Bdistachyon_556_v3.2.gene.gff3_prom-5utr.coord
+  279  ls
+  280  ls
+  281  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/parse_kmer_mapping.py neg_enz_clust_all_imp_kmers_PTAL-ADH1.txt.gff
+  282  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/parse_kmer_mapping.py neg_enz_clust_all_imp_kmers_PTAL-ADH1.txt.gff
+  283  cd ../pos_coexpressed_lignin_enz/
+  284  ls
+  285  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/parse_kmer_mapping.py lignin_coexpressed_enz_all_imp_kmers_PTAL-ADH1.txt.gff 
+  286  ln -s ../neg_clusters/neg_enz_clust_all_imp_kmers_PTAL-ADH1.txt.gff.parsed.txt 
+  287  ls
+  288  python ~/Desktop/post_doc/scripts/Utilities/combine_dataframes_pd.py -df1 lignin_coexpressed_enz_all_imp_kmers_PTAL-ADH1.txt.gff.parsed.txt -df2 neg_enz_clust_all_imp_kmers_PTAL-ADH1.txt.gff.parsed.txt -type o
+  289  ls
+  290  ssh bmoore22@submit2.chtc.wisc.edu
+  291  cd Desktop/post_doc/2_coexpress_pthwy/brachy/promoter_enrich_Brachy_556_v3.2/
+  292  ls
+  293  cd ADH1_brachy_CRE_ML_results/
+  294  ls
+  295  scp bmoore22@submit2.chtc.wisc.edu:Sp_brachy_clusters_0.7_*df_p0.01.txt_nodups.txt_* ./
+  296  ls
+  297  mv *_v3.2.2.txt_mRNA5utr.fa* ML_mRNA5utr/
+  298  ls
+  299  mv *_v3.2.2.txt.fa* mRNA_start/
+  300  ls
+  301  mv *_v3.2.txt_mod.txt.fa* gene_start/
+  302  ls
+  303  cd ../PTAL_CRE_ML_results/
+  304  scp bmoore22@submit2.chtc.wisc.edu:*_PTAL_*_df_p0.01.txt_nodups.txt_ ./
+  305  scp bmoore22@submit2.chtc.wisc.edu:*_PTAL_*_df_p0.01.txt_nodups.txt_* ./
+  306  ls
+  307  mv *_v3.2.2_mRNA5utr.fa_* ML_results_mRNA5utr/
+  308  ls
+  309  mv *_v3.2.txt.fa_* ML_results_genestart/
+  310  ls
+  311  mv *_v3.2.2txt.fa_* ML_results_mRNA_start/
+  312  ls
+  313  cd ML_results_genestart/
+  314  ls
+  315  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/sum_ML-CRE_results.py -f ./ -name PTAL_ML_CRE_gene_results -matrix T
+  316  ls
+  317  less PTAL_ML_CRE_gene_results
+  318  ls ../
+  319  mv PTAL_ML_CRE_gene_results PTAL_ML_CRE_gene_results_matrix.txt
+  320  mv PTAL_ML_CRE_gene_results_matrix.txt ../
+  321  cd ../
+  322  ls
+  323  less PTAL_ML_gene_result_matrix.txt
+  324  wc -l PTAL_ML_gene_result_matrix.txt
+  325  wc -l PTAL_ML_CRE_gene_results_matrix.txt
+  326  less PTAL_ML_CRE_gene_results_matrix.txt
+  327  rm PTAL_ML_gene_result_matrix.txt
+  328  ls
+  329  cd ML_results_mRNA_start
+  330  ls
+  331  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/sum_ML-CRE_results.py -f ./ -name PTAL_ML_CRE_mRNA_results_matrix.txt -matrix T
+  332  ls
+  333  mv PTAL_ML_CRE_mRNA_results_matrix.txt ../
+  334  cd ../
+  335  ls
+  336   less PTAL_ML_CRE_mRNA_results_matrix.txt
+  337  cd ML_results_mRNA5utr
+  338  ls
+  339  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/sum_ML-CRE_results.py -f ./ -name PTAL_ML_CRE_mRNA5utr_results_matrix.txt -matrix T
+  340  mv PTAL_ML_CRE_mRNA5utr_results_matrix.txt ../
+  341  cd ../
+  342  ls
+  343  rm PTAL_mRNA5utr_results_matrix.txt
+  344  less PTAL_ML_CRE_mRNA5utr_results_matrix.txt
+  345  cd ../ADH1_brachy_CRE_ML_results/
+  346  ls
+  347  cd gene_start/
+  348  ls
+  349  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/sum_ML-CRE_results.py -f ./ -name ADH1_gene_results_matrix.txt -matrix T
+  350  mv ADH1_gene_results_matrix.txt ../
+  351  cd ../
+  352  ls
+  353  rm ADH1_ML_CRE_mRNA_results.txt
+  354  rm ADH1_ML_CRE_mRNA_results_matrix.txt
+  355  cd mRNA_start/
+  356  ls
+  357  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/sum_ML-CRE_results.py -f ./ -name ADH1_mRNA_results_matrix.txt -matrix T
+  358  mv ADH1_mRNA_results_matrix.txt ../
+  359  cd ../
+  360  ls
+  361  cd ML_mRNA5utr/
+  362  ls
+  363  python ~/Desktop/post_doc/scripts/2_coexpress_pthwy/sum_ML-CRE_results.py -f ./ -name ADH1_mRNA5utr_results_matrix.txt -matrix T
+  364  mv ADH1_mRNA5utr_results_matrix.txt ../
+  365  cd ../
+  366  ls
+  367  cd ../
+  368  ls
+  369  scp PTAL-ADH_clusters_to_rerun_GB_updated0216.txt bmoore22@submit2.chtc.wisc.edu:
+  370  cd ../../
+  371  cd ../
+  372  cd orthofinder/
+  373  ls
+  374  cd Results_greenplant_210210
+  375  ls
+  376  tar -zxvkf grplnt_Results.tar.gz grplant_input/OrthoFinder/Results_Feb04/Orthogroups*
+  377  ls
+  378  ls grplant_input/
+  379  ls grplant_input/OrthoFinder/
+  380  ls grplant_input/OrthoFinder/Results_Feb04/
+  381  cp -R grplant_input/OrthoFinder/Results_Feb04/Orthogroups/ ~/../../Volumes/maeda2-1/orthofinder/green_plant/grplant_input/OrthoFinder/Results_Feb04/
+  382  tar -zxvkf grplnt_Results.tar.gz grplant_input/OrthoFinder/Results_Feb04/Phylogenetic_Hierarchical_Orthogroups*
+  383  tar -zxvkf grplnt_Results.tar.gz grplant_input/OrthoFinder/Results_Feb04/Phylogenetically_Misplaced_Genes*
+  384  cp -R grplant_input/OrthoFinder/Results_Feb04/Phylogenetic* ~/../../Volumes/maeda2-1/orthofinder/green_plant/grplant_input/OrthoFinder/Results_Feb04/
+  385  tar -zxvkf grplnt_Results.tar.gz grplant_input/OrthoFinder/Results_Feb04/Putative_Xenologs*
+  386  cp -R grplant_input/OrthoFinder/Results_Feb04/Putative_Xenologs/ ~/../../Volumes/maeda2-1/orthofinder/green_plant/grplant_input/OrthoFinder/Results_Feb04/
+  387  tar -zxvkf grplnt_Results.tar.gz grplant_input/OrthoFinder/Results_Feb04/Single_Copy_Orthologue_Sequences*
+  388  cp -R grplant_input/OrthoFinder/Results_Feb04/Single_Copy_Orthologue_Sequences/ ~/../../Volumes/maeda2-1/orthofinder/green_plant/grplant_input/OrthoFinder/Results_Feb04/
+  389  tar -zxvkf grplnt_Results.tar.gz grplant_input/OrthoFinder/Results_Feb04/Species_Tree*
+  390  cp -R grplant_input/OrthoFinder/Results_Feb04/Species_Tree/ ~/../../Volumes/maeda2-1/orthofinder/green_plant/grplant_input/OrthoFinder/Results_Feb04/
+  391  tar -zxvkf grplnt_Results.tar.gz grplant_input/OrthoFinder/Results_Feb04/Comparative_genomics_Stat*
+  392  tar -zxvkf grplnt_Results.tar.gz grplant_input/OrthoFinder/Results_Feb04/Comparative_Genomics_Stat*
+  393  cp -R grplant_input/OrthoFinder/Results_Feb04/Comparative_Genomics_Statistics/ ~/../../Volumes/maeda2-1/orthofinder/green_plant/grplant_input/OrthoFinder/Results_Feb04/
+  394  ls
+  395  cd grplant_input/
+  396  ls
+  397  cd OrthoFinder/
+  398  ls
+  399  cd Results_Feb04/
+  400  ls
+  401  ls Single_Copy_Orthologue_Sequences/
+  402  ls Phylogenetic_Hierarchical_Orthogroups/
+  403  ls Phylogenetically_Misplaced_Genes/
+  404  ls
+  405  ls Orthogroups/
+  406  ls
+  407  ls Comparative_Genomics_Statistics/
+  408  ls Phylogenetically_Misplaced_Genes/
+  409  ls 
+  410  ls Orthogroups/
+  411  cd pwd
+  412  pwd
+  413  cd ../../../../../
+  414  cd 1_phylogenies/
+  415  ls
+  416  a.python ~/Desktop/post_doc/scripts/parse_ortho_for_certain_genes.py -genel brachy_phenylpropanoid_genes_v3.2.txt -orthocount ~/Desktop/post_doc/orthofinder/Results_greenplant_Apr08/Orthogroups.GeneCount.csv -orthogrp ~/Desktop/post_doc/orthofinder/Results_greenplant_Apr08/Orthogroups.txt
+  417  210203
+  418  python ~/Desktop/post_doc/scripts/parse_ortho_for_certain_genes.py -genel phenylpropanoid_genes_v3.2.txt -orthocount ~/Desktop/post_doc/orthofinder/Results_greenplant_210210/grplant_input/OrthoFinder/Results_Feb04/Orthogroups/Orthogroups.GeneCount.csv -orthogrp ~/Desktop/post_doc/orthofinder/Results_greenplant_210210/grplant_input/OrthoFinder/Results_Feb04/Orthogroups/Orthogroups.txt
+  419  python ~/Desktop/post_doc/scripts/1_phylogenies/parse_ortho_for_certain_genes.py -genel phenylpropanoid_genes_v3.2.txt -orthocount ~/Desktop/post_doc/orthofinder/Results_greenplant_210210/grplant_input/OrthoFinder/Results_Feb04/Orthogroups/Orthogroups.GeneCount.csv -orthogrp ~/Desktop/post_doc/orthofinder/Results_greenplant_210210/grplant_input/OrthoFinder/Results_Feb04/Orthogroups/Orthogroups.txt
+  420  python ~/Desktop/post_doc/scripts/1_phylogenies/parse_ortho_for_certain_genes.py -genel phenylpropanoid_genes_v3.2.txt -orthocount ~/Desktop/post_doc/orthofinder/Results_greenplant_210210/grplant_input/OrthoFinder/Results_Feb04/Orthogroups/Orthogroups.GeneCount.tsv -orthogrp ~/Desktop/post_doc/orthofinder/Results_greenplant_210210/grplant_input/OrthoFinder/Results_Feb04/Orthogroups/Orthogroups.txt
+  421  ls
+  422  ls
+  423  cd 5_PMT_phlogeny
+  424  ls
+  425  ssh bmoore22@submit2.chtc.wisc.edu
+  426  cd Desktop/post_doc/1_phylogenies/5_PMT_phlogeny/
+  427  ls
+  428  cp /Volumes/maeda2/orthofinder/green_plant/grplant_input/OrthoFinder/Results_Feb04/Orthogroup_Sequences/OG0000893.fa ./
+  429  ls
+  430  less OG0000893.fa
+  431  grep ">" -o OG0000893.fa | wc -l
+  432  mv OG0000893.fa PMT_grplnt2_OG0000893.fa
+  433  ls
+  434  python ~/Desktop/post_doc/scripts/1_phylogenies/filter_fasta.py -fasta PMT_grplnt2_OG0000893.fa -stdv 2
+  435  ls
+  436  mv PMT_grplnt2_OG0000893.fa_parsed.fa PMT_grplnt2_OG0000893.fa_filterstdev2.fa
+  437  python ~/Desktop/post_doc/scripts/1_phylogenies/filter_fasta.py -fasta PMT_grplnt2_OG0000893.fa -bp 50
+  438  ls
+  439  mv PMT_grplnt2_OG0000893.fa_parsed.fa PMT_grplnt2_OG0000893.fa_filter50bp.fa
+  440  ls
+  441  ls
+  442  mafft --auto --anysymbol PMT_grplnt2_OG0000893.fa_filterstdev2.fa > PMT_grplnt2_OG0000893.fa_filterstdev2.fa.aln
+  443  ls
+  444  mafft --auto --anysymbol PMT_grplnt2_OG0000893.fa_filter50bp.fa > PMT_grplnt2_OG0000893.fa_filter50bp.fa.aln
+  445  ls
+  446  scp *.aln bmoore22@submit2.chtc.wisc.edu:
+  447  cd ../14_HCT_phylogeny/
+  448  ls
+  449  cp /Volumes/maeda2/orthofinder/green_plant/grplant_input/OrthoFinder/Results_Feb04/Orthogroup_Sequences/OG0000964.fa ./
+  450  ls
+  451  grep ">" -o OG0000964.fa | wc -l
+  452  mv OG0000964.fa HCT_grplnt_OG0000964.fa
+  453  python ~/Desktop/post_doc/scripts/1_phylogenies/filter_fasta.py -fasta PMT_grplnt2_OG0000893.fa -stdv 2
+  454  mv HCT_grplnt_OG0000964.fa HCT_grplnt2_OG0000964.fa
+  455  python ~/Desktop/post_doc/scripts/1_phylogenies/filter_fasta.py -fasta HCT_grplnt2_OG0000964.fa -stdv 2
+  456  ls
+  457  mv HCT_grplnt2_OG0000964.fa_parsed.fa HCT_grplnt2_OG0000964.fa_filterstdev2.fa
+  458  python ~/Desktop/post_doc/scripts/1_phylogenies/filter_fasta.py -fasta HCT_grplnt2_OG0000964.fa -bp 50
+  459  ls
+  460  mv HCT_grplnt2_OG0000964.fa_parsed.fa HCT_grplnt2_OG0000964.fa_filter50bp.fa
+  461  ls
+  462  mafft --auto --anysymbol HCT_grplnt2_OG0000964.fa_filterstdev2.fa > HCT_grplnt2_OG0000964.fa_filterstdev2.fa.aln
+  463  ls
+  464  mafft --auto --anysymbol HCT_grplnt2_OG0000964.fa_filter50bp.fa > HCT_grplnt2_OG0000964.fa_filter50bp.fa.aln
+  465  ls
+  466  scp *.aln bmoore22@submit2.chtc.wisc.edu:
+  467  /Volumes/clustalw-2.1-macosx/clustalw-2.1-macosx/clustalw2 ; exit;
+  468  cd Desktop/post_doc/Botany_563_Phylogenetics/
+  469  ls
+  470  cd Phylo563/
+  471  ls
+  472  wget https://www.kuleuven.be/aidslab/phylogenybook/Data_sets_files/primatesAA_2.fasta
+  473  ls ~/Downloads/
+  474  clustalw2 -ALIGN
+  475  ~/Downloads/clustalw-2.1-macosx/clustalw2 -ALIGN
+  476  ~/Downloads/clustalw-2.1-macosx/clustalw2 -ALIGN
+  477  /Users/Beth/Downloads/clustalw-2.1-macosx/clustalw2
+  478  ls
+  479  cd Desktop/post_doc/orthofinder/
+  480  ls
+  481  cd Results_greenplant_210210/
+  482  ls
+  483  ls grplant_input/OrthoFinder/Results_Feb04/
+  484  tar -zxvkf grplnt_Results.tar.gz grplant_input/OrthoFinder/Results_Feb04/WorkingDirectory/SequenceIDs*
+  485  tar -zxvkf grplnt_Results.tar.gz grplant_input/OrthoFinder/Results_Feb04/WorkingDirectory/SpeciesID*
+  486  cd Desktop/post_doc/2_coexpress_pthwy/brachy/
+  487  ls
+  488  cd promoter_enrich_Brachy_556_v3.2/
+  489  ls
+  490  scp bmoore22@submit2.chtc.wisc.edu:Sp_brachy_clusters_0.7_6491.txt_v3.2.2.txt.fa_random8_df_p0.01.txt_nodups.txt_GB_* ADH1_brachy_CRE_ML_results/mRNA_start/
+  491  cd ~/Desktop/Github/
+  492  ls
+  493  cd ML-Pipeline/
+  494  ls
+  495  git pull
+  496  cd ../
+  497  ls
+  498  git clone https://github.com/bmmoore43/ML-Pipeline.git
+  499  rm -R ML-Pipeline/
+  500  cd Desktop/Github/
+  501  ls
+  502  cd ML-Pipeline/
+  503  ls
+  504  ls
+  505  cd ../
+  506  ls
+  507  git clone https://github.com/bmmoore43/ML-Pipeline.git
+  508  ls
+  509  cd ML-Pipeline/
+  510  ls
+  511  cd ../
+  512  tar -czvf ML-Pipeline.tar.gz ML-Pipeline/
+  513  ls
+  514  scp ML-Pipeline.tar.gz bmoore22@submit2.chtc.wisc.edu:
+  515  tar -czvf ML-Pipeline.tar.gz ML-Pipeline/
+  516  scp ML-Pipeline.tar.gz bmoore22@submit2.chtc.wisc.edu:
+  517  tar -czvf ML-Pipeline.tar.gz ML-Pipeline/
+  518  scp ML-Pipeline.tar.gz bmoore22@submit2.chtc.wisc.edu:
+  519  tar -czvf ML-Pipeline.tar.gz ML-Pipeline/
+  520  scp ML-Pipeline.tar.gz bmoore22@submit2.chtc.wisc.edu:
+  521  tar -czvf ML-Pipeline.tar.gz ML-Pipeline/
+  522  scp ML-Pipeline.tar.gz bmoore22@submit2.chtc.wisc.edu:
+  523  cd ML-Pipeline
+  524  git add ML_classification.py 
+  525  git commit -m convert dataframe to numeric to avoid downstream errors
+  526  git commit -m 'convert dataframe to numeric to avoid downstream errors'
+  527  git push origin master
+  528  cd ~/Desktop/post_doc/Botany_563_Phylogenetics/
+  529  ls
+  530  ls ~/Downloads/
+  531  ls ~/Downloads/clustalw-2.1-macosx
+  532  ls ~/Downloads/clustalw-2.1-macosx/clustalw
+  533  ls ~/Downloads/clustalw-2.1-macosx/clustalw2
+  534  /Users/Beth/Downloads/clustalw-2.1-macosx/clustalw2 -ALIGN
+  535  man zsh
+  536  chsh -s /bin/zsh
+  537  /Users/Beth/Downloads/clustalw-2.1-macosx/clustalw2 -ALIGN
+  538  ls /Users/Beth/Downloads/clustalw-2.1-macosx/
+  539  less /Users/Beth/Downloads/clustalw-2.1-macosx/clustalw_help 
+  540  ls ~/Desktop/software/clustalw-2.1-macosx/
+  541  ~/Desktop/software/clustalw-2.1-macosx/clustalw2 -ALIGN
+  542  chsh -s /bin/bash
+  543  ~/Desktop/software/clustalw-2.1-macosx/clustalw2 -ALIGN
+  544  cd /Users/Beth/Desktop/software/
+  545  ls
+  546  tar zxvf clustalw-2.1-linux-x86_64-libcppstatic.tar.gz
+  547  ls
+  548  ls clustalw-2.1-linux-x86_64-libcppstatic
+  549  clustalw-2.1-linux-x86_64-libcppstatic/clustalw2 
+  550  ls
+  551  tar zxvf clustalw-2.1.tar.gz 
+  552  ls
+  553  ls clustalw-2.1
+  554  cat clustalw-2.1/README 
+  555  cd clustalw-2.1
+  556  ls
+  557  ./configure
+  558  make
+  559  ls
+  560  make install
+  561  ls
+  562  cat README 
+  563  ls
+  564  Makefile
+  565  ls src
+  566  ls
+  567  cat README 
+  568  cd ../
+  569  ls
+  570  cd clustalw-2.1-macosx
+  571  ls
+  572  less clustalw_help 
+  573  clustalw2
+  574  clustalw2 -ALIGN
+  575  cd ../
+  576  cd ../
+  577  ls
+  578  cd post_doc/
+  579  cd Botany_563_Phylogenetics/
+  580  ls
+  581  ls Phylo563/
+  582  cd Phylo563/
+  583  ls
+  584  ~/Desktop/software/clustalw-2.1-macosx/clustalw2 -ALIGN primatesAA_2.fasta
+  585  ~/Desktop/software/clustalw-2.1-macosx/clustalw2
+  586  cd ~/Desktop/software/
+  587  ls
+  588  conda create -n clustalw2 -c biobuilds -y clustalw
+  589  conda activate clustalw2
+  590  clustalw2 -ALIGN
+  591  cd ../
+  592  ls
+  593  cd post_doc/
+  594  ls
+  595  cd Botany_563_Phylogenetics/
+  596  ls
+  597  cd Phylo563/
+  598  ls
+  599  grep ">" primatesAA_2.fasta | wc -l
+  600  less primatesAA_2.fasta
+  601  grep ">" primatesAA.fasta | wc -l
+  602  history > hist.txt
