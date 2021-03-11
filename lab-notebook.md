@@ -895,3 +895,56 @@ how to unpack:
 	tar -xzf Orthofinder.tar.gz -C Orthofinder
 	source Orthofinder/bin/activate
 	conda-unpack
+
+how to run on chtc:
+
+executable file where grplant_input.tar.gz are tarred fasta files (orthofinder.sh):
+
+	#!/bin/bash
+
+	mkdir -p Orthofinder
+	tar -xzf Orthofinder.tar.gz -C Orthofinder
+	source Orthofinder/bin/activate
+	conda-unpack
+	cp /staging/bmoore22/grplant_input.tar.gz ./
+	tar -xzvf grplant_input.tar.gz
+	ls
+	Orthofinder/bin/orthofinder -f grplant_input/ -t 16
+	ls
+	tar -czvf grplnt_Results.tar.gz grplant_input/OrthoFinder/
+	mv grplnt_Results.tar.gz /staging/bmoore22/
+	rm grplant_input.tar.gz
+
+	# END
+	
+submit file (orthofinder.sub):
+
+	# orthofinder.sub
+	# specify error output
+	universe = vanilla
+	log = ortho_$(Cluster).log
+	error = ortho_$(Cluster)_$(Process).err
+	output = ortho_$(Cluster).out
+	# specify executable, file transfer and arguments
+	executable = orthofinder.sh
+	Requirements = (Target.HasCHTCStaging == true)
+	should_transfer_files = YES
+	when_to_transfer_output = ON_EXIT
+	# arguments= $(request_cpus)
+	transfer_input_files = http://proxy.chtc.wisc.edu/SQUID/bmoore22/Orthofinder.tar.gz
+	# compute resources
+	request_cpus = 16
+	request_memory = 30GB
+	request_disk = 30GB
+	getenv=true
+	##
+	# Tell condor you wan to queue up files in a list
+	queue 1
+	
+submit to chtc:
+
+	condor_q orthofinder.sub
+	
+## Distance based and parsimony trees
+
+See distance_based_methods.R for R script
