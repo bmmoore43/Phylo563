@@ -948,3 +948,222 @@ submit to chtc:
 ## Distance based and parsimony trees
 
 See distance_based_methods.R for R script
+
+## Running RAxML-NG
+
+### Installation
+
+Instructions are here: https://github.com/amkozlov/raxml-ng/wiki/Installation
+
+Install using bioconda:
+
+	conda install -c bioconda raxml-ng 
+	
+Go to directory with raxml program and check correct installation:
+
+	cd Desktop/Github/RAxML/
+	./raxml-ng -v
+	
+	RAxML-NG v. 1.0.2 released on 22.02.2021 by The Exelixis Lab.
+	
+### Running RAxML
+
+1. Prepare the alignment
+
+	./raxml-ng --check --msa ng-tutorial/prim.phy --model GTR+G --prefix T1
+	
+ --prefix names the output
+ --parse used to compress alignment to binary format (for faster analysis)
+ 
+ 	./raxml-ng --parse --msa ng-tutorial/prim.phy --model GTR+G --prefix T2
+	
+ results in compressed alignment (.rba) file:
+ 
+ 	T2.raxml.rba
+	
+2. Tree inference
+
+ Using default parameters and random seed 2
+ 
+ 	./raxml-ng --msa ng-tutorial/prim.phy --model GTR+G --prefix T3 --threads 2 --seed 2
+	
+  results in rba file, bestModel, bestTree, mlTrees, and startTree files
+  Default is 20 starting trees, 10 random and 10 parsimony based
+  
+  Adjusting number of starting trees to 25 parsimony and 25 random:
+  
+  	./raxml-ng --msa ng-tutorial/prim.phy --model GTR+G --prefix T4 --threads 2 --seed 2 --tree pars{25},rand{25}
+	
+  Using only 1 starting tree with --search1 option:
+  
+  	./raxml-ng --search1 --msa ng-tutorial/prim.phy --model GTR+G --prefix T5 --threads 2 --seed 2
+	
+  Compare results of these 3 trees using grep and log files:
+  
+  	grep "Final LogLikelihood:" T{3,4,5}.raxml.log
+	
+  result:
+  
+	T3.raxml.log:Final LogLikelihood: -5708.925408
+	T4.raxml.log:Final LogLikelihood: -5708.925408
+	T5.raxml.log:Final LogLikelihood: -5708.940534
+ 
+ T5 has a slightly worse likelihood
+ 
+ Check topology by using the --rfdist command to compute the topological Robinson-Foulds (RF) distance between all trees
+ 
+ 	cat T{3,4}.raxml.mlTrees T5.raxml.bestTree > mltrees
+	./raxml-ng --rfdist --tree mltrees --prefix RF
+	
+ Result RF.raxml.rfDistances file:
+ 
+ 	[...]
+	Loaded 71 trees with 12 taxa.
+
+	Average absolute RF distance in this tree set: 0.000000
+	Average relative RF distance in this tree set: 0.000000
+	Number of unique topologies in this tree set: 1
+	
+ Thus all topologies are identical, meaning it is likely we found global maximum tree
+
+ Try another tree to see differences in different starting trees:
+
+	./raxml-ng --msa ng-tutorial/fusob.phy --model GTR+G --prefix T6 --seed 2 --threads 2
+ 
+ compare trees via log:
+ 
+  	grep "ML tree search #" T6.raxml.log
+	
+	[00:00:05] [worker #0] ML tree search #1, logLikelihood: -9974.664133
+	[00:00:06] [worker #1] ML tree search #2, logLikelihood: -9974.666327
+	[00:00:12] [worker #0] ML tree search #3, logLikelihood: -9974.678090
+	[00:00:12] [worker #1] ML tree search #4, logLikelihood: -9974.670374
+	[00:00:19] [worker #1] ML tree search #6, logLikelihood: -9974.674380
+	[00:00:20] [worker #0] ML tree search #5, logLikelihood: -9974.668886
+	[00:00:27] [worker #1] ML tree search #8, logLikelihood: -9974.668482
+	[00:00:29] [worker #0] ML tree search #7, logLikelihood: -9974.672609
+	[00:00:35] [worker #1] ML tree search #10, logLikelihood: -9974.668257
+	[00:00:36] [worker #0] ML tree search #9, logLikelihood: -9974.665060
+	[00:00:41] [worker #1] ML tree search #12, logLikelihood: -9980.604144
+	[00:00:42] [worker #0] ML tree search #11, logLikelihood: -9974.669312
+	[00:00:48] [worker #1] ML tree search #14, logLikelihood: -9974.673006
+	[00:00:49] [worker #0] ML tree search #13, logLikelihood: -9974.668244
+	[00:00:55] [worker #1] ML tree search #16, logLikelihood: -9974.670595
+	[00:00:56] [worker #0] ML tree search #15, logLikelihood: -9974.673735
+	[00:01:02] [worker #1] ML tree search #18, logLikelihood: -9980.602429
+	[00:01:03] [worker #0] ML tree search #17, logLikelihood: -9974.669829
+	[00:01:08] [worker #1] ML tree search #20, logLikelihood: -9980.602413
+	[00:01:09] [worker #0] ML tree search #19, logLikelihood: -9980.604230
+	
+ some searches converged to a local optimum with a much lower likelihood (-9980.602429 vs. -9974.669829)
+ 
+ compare topology:
+ 
+ 	./raxml-ng --rfdist --tree T6.raxml.mlTrees --prefix RF6
+	
+	Loaded 20 trees with 38 taxa.
+
+	Average absolute RF distance in this tree set: 2.694737
+	Average relative RF distance in this tree set: 0.038496
+	Number of unique topologies in this tree set: 2
+	Pairwise RF distances saved to: /Users/Beth/Desktop/Github/RAxML/RF6.raxml.rfDistances
+	
+ we have 2 distinct topologies in our set of 20 inferred trees.. looking at distances:
+ 
+ 	cat RF6.raxml.rfDistances
+	
+	0	1	0	0.000000
+	0	2	0	0.000000
+	0	3	0	0.000000
+	0	4	0	0.000000
+	0	5	0	0.000000
+	0	6	0	0.000000
+	0	7	0	0.000000
+	0	8	0	0.000000
+	0	9	0	0.000000
+	0	10	0	0.000000
+	0	11	8	0.114286
+	0	12	0	0.000000
+	0	13	0	0.000000
+	0	14	0	0.000000
+	0	15	0	0.000000
+	0	16	0	0.000000
+	0	17	8	0.114286
+	0	18	8	0.114286
+	0	19	8	0.114286
+	1	2	0	0.000000
+	1	3	0	0.000000
+	1	4	0	0.000000
+	1	5	0	0.000000
+	1	6	0	0.000000
+	1	7	0	0.000000
+	1	8	0	0.000000
+	1	9	0	0.000000
+	1	10	0	0.000000
+	1	11	8	0.114286
+	1	12	0	0.000000
+	1	13	0	0.000000
+	1	14	0	0.000000
+	1	15	0	0.000000
+	1	16	0	0.000000
+	1	17	8	0.114286
+	1	18	8	0.114286
+	1	19	8	0.114286
+	...
+
+ All 10 searches from the random starting trees (trees 0 to 9) found the best-scoring topology (RF=0, logL=-9974), whereas 5 out of 10 searches from a parsimony starting  tree converged to a local optimum (RF = 8, logL = -9980).
+ 
+ ### Bootstrapping
+ 
+ 1. standard non-parametric bootstrap by re-sampling alignment columns and re-inferring tree for each bootstrap replicate MSA
+
+		./raxml-ng --bootstrap --msa ng-tutorial/prim.phy --model GTR+G --prefix T7 --seed 2 --threads 2
+		
+		Starting bootstrapping analysis with 1000 replicates.
+
+		[00:00:00] [worker #0] Bootstrap tree #1, logLikelihood: -5751.388550
+		[00:00:01] [worker #1] Bootstrap tree #2, logLikelihood: -5782.330955
+		[00:00:01] [worker #1] Bootstrap tree #4, logLikelihood: -5476.488708
+		...
+		Bootstrapping converged after 50 replicates.
+		Bootstrap trees saved to: /Users/Beth/Desktop/Github/RAxML/T7.raxml.bootstraps
+		
+2. Bootstrapping options
+
+     manually set bootstrapping:
+
+		./raxml-ng --bootstrap --msa ng-tutorial/prim.phy --model GTR+G --prefix T8 --seed 2 --threads 2 --bs-trees 200
+		
+     checking bootstrap convergence post-hoc
+     
+     		./raxml-ng --bsconverge --bs-trees T7.raxml.bootstraps --prefix T9 --seed 2 --threads 2 --bs-cutoff 0.01
+		
+		 # trees        avg WRF       avg WRF in %       # perms: wrf <= 1.00 %     converged?  
+      		50          5.260              1.169                          318        NO
+		Bootstopping test did not converge after 50 trees
+		
+     result: 50 bootstraps is not enough with 1% cutoff
+     
+     checking 200 bootstraps:
+     
+     		./raxml-ng --bsconverge --bs-trees T8.raxml.bootstraps --prefix T10 --seed 2 --threads 2  --bs-cutoff 0.01
+		
+		 # trees        avg WRF       avg WRF in %       # perms: wrf <= 1.00 %     converged?  
+      		50          5.260              1.169                          318        NO
+     		100          9.582              1.065                          451        NO
+     		150         12.644              0.937                          680        NO
+     		200         13.902              0.772                          818        NO
+      
+      Bootstopping test did not converge after 200 trees.. but weighted RF distance (avg WRF in %) is steadily decreasing
+      
+      Adding 400 more replicate trees to the first 200 bootstraps. 
+      It is however important to specify a distinct random seed for the second run, otherwise first 200 trees will be identical to the first batch!
+      
+      		./raxml-ng --bootstrap --msa ng-tutorial/prim.phy --model GTR+G --prefix T11 --seed 333 --threads 2 --bs-trees 400
+		
+      concatenate replicate trees from both runs, and re-assess the convergence:
+
+		cat T8.raxml.bootstraps T11.raxml.bootstraps > allbootstraps
+		raxml-ng --bsconverge --bs-trees allbootstraps --prefix T12 --seed 2 --threads 1 --bs-cutoff 0.01
+     
+     	
