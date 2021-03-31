@@ -52,11 +52,11 @@ Used to test which evolutionary model works best for your data. Normally with pr
 
   1. clone
   
-      git clone https://github.com/ddarriba/modeltest
+                git clone https://github.com/ddarriba/modeltest
       
   2. install dependencies
   
-      brew install flex bison
+                brew install flex bison
       
   3. build
   
