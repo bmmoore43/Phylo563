@@ -118,12 +118,17 @@ Used to test which evolutionary model works best for your data. Normally with pr
 
    a. Run on PTAL
    
-        Raxml-ng/bin/raxml-ng --msa PTAL_OG0000908_monocotMar05.txt.fa_filter_bp50.fa.aln --model JTT+G4+F+I --prefix PTAL_OG0000908_monocotMar05.txt.fa_filter_bp50.fa.aln_T1 --format fasta --threads 16 --seed 210402 --tree pars{10},rand{10}, OG0000908_tree.txt_mod2.txt --all --bs-metric fbp,tbe --bs-trees 200 --outgroup evm_27.model.AmTr_v1.0_scaffold00032.129,evm_27.model.AmTr_v1.0_scaffold00148.59 --force perf_threads
+        Raxml-ng/bin/raxml-ng --msa PTAL_OG0000908_monocotMar05.txt.fa_filter_stdv2.fa.aln --model JTT+G4+F+I --prefix PTAL_OG0000908_monocotMar05.txt.fa_filter_stdv2.fa.aln_T1 --format fasta --threads 16 --seed 210402 --tree pars{10},rand{10}, OG0000908_tree.txt_mod2.txt --all --bs-metric fbp,tbe --bs-trees 200 --outgroup evm_27.model.AmTr_v1.0_scaffold00032.129,evm_27.model.AmTr_v1.0_scaffold00148.59 --force perf_threads
 
    Specifies alignment (--msa), model type (--model), output name (--prefix), msa format (--format), cpus to use (--threads), random seed number (--seed), starting trees (--tree), combined tree search and bootstrapping analysis (--all), what bootstrapping metric to use (--bs-metric), number of bootstraps (--bs-trees), outgroup (--outgroup), force number of threads (chtc issue) (--force).
    
    b. Run on TyrA
    
+        Raxml-ng/bin/raxml-ng --msa TYRA_OG0001859_monocotMar05.txt.fa_filter_stdv2.fa.aln --model JTT+I+G4+F --prefix TYRA_OG0001859_monocotMar05.txt.fa_filter_stdv2_JTTG4IF-T1 --msa-format fasta --threads 16 --seed 210325 --tree pars{10},rand{10},OG0001859_tree.txt_mod_stdv2.txt --all --bs-metric fbp,tbe --bs-trees 200 --outgroup evm_27.model.AmTr_v1.0_scaffold00027.113,evm_27.model.AmTr_v1.0_scaffold00069.98
+        
+10. Tree visualization
+
+    a. Trees were visualized using ggtree. See ggtree_fin.R. 
         
 
 
